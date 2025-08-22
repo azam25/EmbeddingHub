@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EmbeddingHub — Centralizing AI Embeddings for Smarter Enterprises</title>
+  <meta name="description" content="Production-grade Python library for AI document processing, embedding generation, and vector search. Enterprise-ready with multi-backend storage, FAISS search, and comprehensive API." />
+  <meta name="keywords" content="AI embeddings, vector search, document processing, RAG, FAISS, enterprise AI, semantic search" />
+  <meta name="theme-color" content="#0ea5e9" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://embeddinghub.ai/" />
+  <meta property="og:title" content="EmbeddingHub — Centralizing AI Embeddings for Smarter Enterprises" />
+  <meta property="og:description" content="Production-grade Python library for AI document processing, embedding generation, and vector search." />
+  <meta property="og:image" content="https://embeddinghub.ai/images/og-image.jpg" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://embeddinghub.ai/" />
+  <meta property="twitter:title" content="EmbeddingHub — Centralizing AI Embeddings for Smarter Enterprises" />
+  <meta property="twitter:description" content="Production-grade Python library for AI document processing, embedding generation, and vector search." />
+  <meta property="twitter:image" content="https://embeddinghub.ai/images/og-image.jpg" />
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "EmbeddingHub",
+    "description": "Production-grade Python library for AI document processing, embedding generation, and vector search",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="%230ea5e9"/><text x="50" y="58" font-size="58" text-anchor="middle" fill="white" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">Ε</text></svg>' />
+  <style>
+    :root {
+      --bg: 245 245 240; /* F5F5F0 - Claude's cream background */
+      --fg: 26 26 26; /* 1A1A1A - Claude's dark text */
+      --muted: 102 102 102; /* 666666 - muted gray for secondary text */
+      --brand: 26 26 26; /* 1A1A1A - dark primary */
+      --brand-2: 64 64 64; /* 404040 - medium gray */
+      --brand-3: 128 128 128; /* 808080 - light gray */
+      --accent: 26 26 26; /* 1A1A1A - dark accent */
+      --accent-2: 89 89 89; /* 595959 - medium accent */
+      --accent-3: 153 153 153; /* 999999 - light accent */
+      --card: 255 255 255; /* Pure white for cards */
+      --card-hover: 250 250 250; /* FAFAFA - subtle hover */
+      --stroke: 230 230 230; /* E6E6E6 - minimal borders */
+      --shadow: 0 4px 20px rgba(0, 0, 0, .08);
+      --glow: 0 0 20px rgba(0, 0, 0, .05);
+      --radius: 8px;
+      --maxw: 1200px;
+    }
+    [data-theme="dark"] {
+      --bg: 45 52 54; /* Dark charcoal background */
+      --fg: 254 250 224; /* FEFAE0 - warm cream text */
+      --muted: 204 213 174; /* CCD5AE - sage green for muted text */
+      --brand: 204 213 174; /* CCD5AE - sage green */
+      --brand-2: 233 237 201; /* E9EDC9 - light sage */
+      --brand-3: 250 237 205; /* FAEDCD - warm beige */
+      --accent: 212 163 115; /* D4A373 - terracotta */
+      --card: 60 67 69; /* Darker card background */
+      --card-hover: 75 82 84; /* Lighter on hover */
+      --stroke: 118 125 127; /* Muted stroke */
+      --shadow: 0 25px 50px rgba(0, 0, 0, .25);
+      --glow: 0 0 40px rgba(204, 213, 174, .15);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+      color: rgb(var(--fg)); 
+      background: rgb(var(--bg));
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+      min-height: 100vh;
+      font-weight: 400;
+    }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .glass { background: rgba(var(--card), .72); backdrop-filter: saturate(150%) blur(12px); border: 1px solid rgb(var(--stroke)); box-shadow: var(--shadow); border-radius: var(--radius); }
+    .tag { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--radius); border: 1px solid rgb(var(--stroke)); 
+           background: rgb(var(--card));
+           color: rgb(var(--muted)); font-weight: 500; letter-spacing: 0; font-size: 14px; }
+    .tag .dot { width: 6px; height: 6px; border-radius: 50%; background: rgb(var(--brand)); }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(150%) blur(8px); border-bottom: 1px solid rgb(var(--stroke)); background: color-mix(in oklab, rgba(var(--bg), .65), transparent 0%);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+    .logo { width: 38px; height: 38px; border-radius: var(--radius); display: grid; place-items: center; font-weight: 700; letter-spacing: 0;
+            background: rgb(var(--brand)); color: white; }
+    .brand span { font-weight: 800; font-size: 18px; }
+
+    .navlinks { display: flex; gap: 18px; align-items: center; }
+    .navlinks a { text-decoration: none; color: rgb(var(--muted)); font-weight: 600; padding: 8px 10px; border-radius: 8px; }
+    .navlinks a:is(:hover,.active) { color: rgb(var(--fg)); background: rgba(var(--brand),.15); }
+
+    .actions { display: flex; gap: 12px; align-items: center; }
+    .btn { 
+      appearance: none; 
+      border: 1px solid rgb(var(--stroke)); 
+      padding: 12px 20px; 
+      border-radius: var(--radius); 
+      font-weight: 500; 
+      text-decoration: none; 
+      cursor: pointer; 
+      background: rgb(var(--card)); 
+      color: rgb(var(--fg));
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    .btn:hover {
+      background: rgb(var(--card-hover));
+      border-color: rgb(var(--brand-2));
+    }
+    .btn.primary { 
+      border: none; 
+      background: rgb(var(--brand)); 
+      color: white; 
+    }
+    .btn.primary:hover {
+      background: rgb(var(--brand-2));
+    }
+    .btn.icon { display: inline-flex; align-items: center; gap: 10px; }
+    .toggle { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid rgb(var(--stroke)); border-radius: 12px; cursor: pointer; background: rgba(255,255,255,.5); }
+
+    /* Mobile nav */
+    .burger { display: none; }
+    @media (max-width: 1024px) {
+      .navlinks { display: none; }
+      .burger { display: grid; }
+    }
+    .mobile-menu { position: fixed; inset: 64px 12px auto 12px; display: none; flex-direction: column; gap: 8px; padding: 16px; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { padding: 10px 12px; border-radius: 10px; text-decoration: none; color: rgb(var(--fg)); border: 1px solid rgb(var(--stroke)); background: rgba(255,255,255,.6); }
+
+    /* Hero */
+    .hero { padding: 72px 0 36px; }
+    .hero-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 32px; align-items: center; }
+    @media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; } }
+    h1 { font-size: clamp(32px, 4vw, 64px); line-height: 1.1; margin: 16px 0; letter-spacing: -0.02em; font-weight: 600; }
+    .lead { font-size: clamp(16px, 2vw, 20px); color: rgb(var(--muted)); margin: 0 0 18px; }
+    .cta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+    .hero .code { margin-top: 18px; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 14px; }
+    .hero .code kbd { color: rgb(var(--fg)); }
+    .copy { border: 1px solid rgb(var(--stroke)); background: rgba(255,255,255,.6); border-radius: 10px; padding: 8px 10px; cursor: pointer; font-weight: 700; }
+
+    .visual { position: relative; min-height: 420px; border-radius: 20px; overflow: hidden; }
+    .bgmesh { position: absolute; inset: 0; background: rgb(var(--card)); }
+    .mock { position: absolute; inset: 18px; border-radius: 14px; border: 1px solid rgb(var(--stroke)); background: rgba(var(--card),.95); box-shadow: var(--shadow); padding: 28px; display: grid; grid-template-columns: 280px 1fr; gap: 32px; overflow: hidden; }
+    @media (max-width: 600px) { .mock { grid-template-columns: 1fr; padding: 16px; gap: 16px; } }
+    .mock .sidebar { border-right: 1px solid rgba(var(--stroke), .3); padding-right: 20px; }
+    .mock .sidebar h4 { margin: 0 0 16px; font-size: 13px; font-weight: 700; color: rgb(var(--fg)); }
+    .mock .content { display: flex; flex-direction: column; justify-content: space-between; min-height: 280px; }
+    .mock .content h4 { margin: 0 0 16px; font-size: 13px; font-weight: 700; color: rgb(var(--fg)); }
+    .bar { height: 6px; border-radius: 3px; margin-bottom: 8px; background: rgb(var(--brand)); }
+    .chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; border: 1px solid rgb(var(--stroke)); margin: 3px 3px 0 0; font-size: 11px; background: rgb(var(--card)); color: rgb(var(--muted)); font-weight: 500; }
+    .pipeline-text { font-size: 12px; color: rgb(var(--muted)); line-height: 1.5; margin: 12px 0; }
+    .chips-container { margin-top: auto; }
+
+    /* Sections */
+    section { padding: 36px 0; scroll-margin-top: 88px; }
+    h2 { font-size: clamp(24px, 2.5vw, 40px); margin: 0 0 20px; letter-spacing: -0.01em; font-weight: 600; }
+    .sub { color: rgb(var(--muted)); margin-top: -6px; margin-bottom: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+    @media (max-width: 980px) {
+      .col-4, .col-6, .col-8, .col-12 { grid-column: span 12; }
+    }
+    .card { 
+      padding: 32px; 
+      border: 1px solid rgb(var(--stroke)); 
+      border-radius: var(--radius); 
+      background: rgb(var(--card)); 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04); 
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .card:hover {
+      background: rgb(var(--card-hover));
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+    }
+    .card h3 { 
+      margin: 0 0 16px; 
+      font-size: 20px; 
+      font-weight: 600;
+      color: rgb(var(--fg));
+    }
+    .card p, .card li { color: rgb(var(--muted)); line-height: 1.7; }
+    .list { margin: 0; padding-left: 18px; }
+    .kpis { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 12px; }
+    @media (max-width: 780px) { .kpis { grid-template-columns: repeat(2,1fr); } }
+    .kpis .card { 
+      background: rgb(var(--card));
+      border: 1px solid rgb(var(--stroke));
+      padding: 24px;
+    }
+    .kpis .card strong { 
+      font-size: 32px; 
+      letter-spacing: -0.02em;
+      color: rgb(var(--fg));
+      font-weight: 600;
+    }
+
+    /* Footer */
+    footer { border-top: 1px solid rgb(var(--stroke)); padding: 28px 0; color: rgb(var(--muted)); }
+
+    /* Utilities */
+    .reveal { opacity: 0; transform: translateY(8px); transition: .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    .mt-0{margin-top:0}.mb-0{margin-bottom:0}.mb-8{margin-bottom:8px}.mt-12{margin-top:12px}.mt-18{margin-top:18px}.mt-24{margin-top:24px}
+    .center { text-align: center; }
+
+    /* Back to top */
+    .to-top { position: fixed; right: 18px; bottom: 18px; z-index: 40; opacity: 0; pointer-events: none; transition: .3s ease; }
+    .to-top.show { opacity: 1; pointer-events: all; }
+
+    /* Progress indicator */
+    .progress-bar { position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: linear-gradient(90deg, rgb(var(--brand)), rgb(var(--brand-2))); z-index: 100; transition: width 0.3s ease; }
+    
+    /* Content navigation */
+    .content-nav { position: fixed; left: 18px; top: 50%; transform: translateY(-50%); z-index: 40; opacity: 0; pointer-events: none; transition: .3s ease; }
+    .content-nav.show { opacity: 1; pointer-events: all; }
+    .content-nav ul { list-style: none; margin: 0; padding: 0; }
+    .content-nav li { margin: 8px 0; }
+    .content-nav a { display: block; width: 12px; height: 12px; border-radius: 50%; background: rgba(var(--muted), .3); border: 2px solid rgba(var(--muted), .5); transition: .3s ease; text-indent: -9999px; }
+    .content-nav a.active { background: rgb(var(--brand)); border-color: rgb(var(--brand)); transform: scale(1.2); }
+    .content-nav a:hover { background: rgba(var(--brand), .7); border-color: rgba(var(--brand), .7); }
+    @media (max-width: 1024px) { .content-nav { display: none; } }
+
+    /* Sticky CTA */
+    .sticky-cta { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(var(--card), .95); backdrop-filter: blur(12px); border-top: 1px solid rgb(var(--stroke)); padding: 12px 0; z-index: 45; transform: translateY(100%); transition: transform .3s ease; }
+    .sticky-cta.show { transform: translateY(0); }
+    .sticky-cta .container { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .sticky-cta .text { font-weight: 600; color: rgb(var(--fg)); }
+    .sticky-cta .actions { display: flex; gap: 12px; }
+    @media (max-width: 768px) { 
+      .sticky-cta .container { flex-direction: column; gap: 8px; text-align: center; }
+      .sticky-cta .actions { width: 100%; justify-content: center; }
+    }
+
+    /* Section summary cards */
+    .section-overview { margin-bottom: 32px; }
+    .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .overview-card { padding: 16px; border: 1px solid rgb(var(--stroke)); border-radius: 12px; background: rgba(var(--card), .6); cursor: pointer; transition: .3s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03); }
+    .overview-card:hover { background: rgba(var(--card), .8); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05); }
+    .overview-card h4 { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
+    .overview-card p { margin: 0; font-size: 14px; color: rgb(var(--muted)); }
+    .overview-card .time { font-size: 12px; color: rgb(var(--muted)); margin-top: 8px; }
+
+    /* Reading progress */
+    .reading-time { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgb(var(--muted)); margin-left: 12px; }
+    .reading-time svg { width: 14px; height: 14px; }
+
+    /* Animated tagline */
+    .animated-tagline {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+    
+    .typewriter {
+      display: inline-block;
+      border-right: 2px solid rgb(var(--brand));
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+    
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: rgb(var(--brand)); }
+    }
+    
+    .highlight-word {
+      background: linear-gradient(135deg, rgba(var(--brand), 0.15), rgba(var(--brand-2), 0.15));
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(var(--brand), 0.2);
+      font-weight: 700;
+      color: rgb(var(--brand));
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { 
+        box-shadow: 0 0 5px rgba(var(--brand), 0.3);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 15px rgba(var(--brand), 0.5);
+        transform: scale(1.02);
+      }
+    }
+    
+    .tagline-container {
+      position: relative;
+      margin: 8px 0 16px;
+    }
+    
+    .tagline-bg {
+      position: absolute;
+      top: -4px;
+      left: -8px;
+      right: -8px;
+      bottom: -4px;
+      background: linear-gradient(90deg, 
+        rgba(var(--brand), 0.05), 
+        rgba(var(--brand-2), 0.05), 
+        rgba(var(--brand), 0.05)
+      );
+      border-radius: 8px;
+      opacity: 0;
+      animation: fade-in-bg 1s ease-in-out 3.8s forwards;
+    }
+    
+    @keyframes fade-in-bg {
+      to { opacity: 1; }
+    }
+    
+    /* Restart animation on hover */
+    .hero:hover .typewriter {
+      animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+  
+  <!-- Content navigation -->
+  <nav class="content-nav" id="contentNav" aria-label="Page sections">
+    <ul>
+      <li><a href="#summary" title="Executive Summary">Summary</a></li>
+      <li><a href="#overview" title="Business Overview">Overview</a></li>
+      <li><a href="#value" title="Value Proposition">Value</a></li>
+      <li><a href="#architecture" title="Technical Architecture">Architecture</a></li>
+      <li><a href="#features" title="Key Features">Features</a></li>
+      <li><a href="#use-cases" title="Use Cases">Use Cases</a></li>
+      <li><a href="#pricing" title="Pricing">Pricing</a></li>
+      <li><a href="#roadmap" title="Roadmap">Roadmap</a></li>
+    </ul>
+  </nav>
+
+  <!-- Sticky CTA -->
+  <div class="sticky-cta" id="stickyCta">
+    <div class="container">
+      <div class="text">Ready to transform your AI document processing?</div>
+      <div class="actions">
+        <a href="#features" class="btn">Explore Features</a>
+        <a href="#summary" class="btn primary">Get Started</a>
+      </div>
+    </div>
+  </div>
+
+  <svg style="position:absolute;width:0;height:0" aria-hidden="true" focusable="false">
+    <symbol id="sun" viewBox="0 0 24 24"><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12ZM12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="copy" viewBox="0 0 24 24"><path d="M9 9h11v11H9z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  </svg>
+
+  <header class="glass">
+    <div class="container nav">
+      <a href="#top" class="brand" aria-label="EmbeddingHub home">
+        <div class="logo">EH</div>
+        <span>EmbeddingHub</span>
+      </a>
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#summary">Summary</a>
+        <a href="#overview">Overview</a>
+        <a href="#value">Value</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#features">Features</a>
+        <a href="#competitive">Competitive</a>
+        <a href="#use-cases">Use Cases</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#gtm">Go‑to‑Market</a>
+        <a href="#risks">Risks</a>
+        <a href="#metrics">Metrics</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#investment">Investment</a>
+        <a href="#conclusion">Conclusion</a>
+      </nav>
+      <div class="actions">
+        <button id="themeToggle" class="toggle" aria-label="Toggle dark mode"><svg width="20" height="20"><use href="#moon"/></svg></button>
+        <a class="btn icon" href="#summary"><svg width="18" height="18"><use href="#arrow"/></svg> Get Started</a>
+        <button class="toggle burger" id="burger" aria-label="Open menu"><svg width="20" height="20"><use href="#menu"/></svg></button>
+      </div>
+    </div>
+    <div class="container mobile-menu glass" id="mnav" role="dialog" aria-label="Mobile Navigation">
+      <a href="#summary">Summary</a>
+      <a href="#overview">Overview</a>
+      <a href="#value">Value</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#features">Features</a>
+      <a href="#competitive">Competitive</a>
+      <a href="#use-cases">Use Cases</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#gtm">Go‑to‑Market</a>
+      <a href="#risks">Risks</a>
+      <a href="#metrics">Metrics</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#investment">Investment</a>
+      <a href="#conclusion">Conclusion</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero container">
+      <div class="hero-grid">
+        <div>
+          <span class="tag"><span class="dot"></span> AI Product</span>
+          <h1>EmbeddingHub</h1>
+          <div class="tagline-container">
+            <div class="tagline-bg"></div>
+            <h2 style="font-size: clamp(18px, 2vw, 24px); font-weight: 600; color: rgb(var(--muted)); position: relative; z-index: 1;">
+              <span class="animated-tagline">
+                <span class="typewriter"><span class="highlight-word">One</span> EmbeddingHub for <span class="highlight-word">Embedding</span> & <span class="highlight-word">Retrieval</span> Across AI Apps</span>
+              </span>
+            </h2>
+          </div>
+          <p class="lead">A production‑grade Python library that unifies document processing, embedding generation, and vector search with enterprise‑ready reliability, scalability, and observability.</p>
+          <div class="cta">
+            <a class="btn primary icon" href="#features"><svg width="18" height="18"><use href="#arrow"/></svg> Explore Features</a>
+            <a class="btn" href="#architecture">View Architecture</a>
+          </div>
+          <div class="code glass mt-18" aria-live="polite"><kbd>https://github.com/azam25/EmbeddingHub</kbd>
+            <button id="copyBtn" class="copy icon" aria-label="Copy install command"><svg width="16" height="16"><use href="#copy"/></svg> Copy</button>
+          </div>
+          <div class="kpis mt-18">
+            <div class="card"><div class="mb-8">Faster Time‑to‑Value</div><strong>6 mo → 2 wk</strong><div class="sub">Pipeline delivery</div></div>
+            <div class="card"><div class="mb-8">Cache Lookups</div><strong>O(1)</strong><div class="sub">LRU/FIFO policies</div></div>
+            <div class="card"><div class="mb-8">Scalability</div><strong>10M+</strong><div class="sub">Docs supported</div></div>
+            <div class="card"><div class="mb-8">Reliability</div><strong>99.9%</strong><div class="sub">Uptime target</div></div>
+          </div>
+        </div>
+        <div class="visual glass" aria-hidden="true">
+          <div class="bgmesh"></div>
+          <div class="mock">
+            <!-- <div class="sidebar">
+              <h4>📄 Document Formats</h4>
+              <div class="chip">PDF</div>
+              <div class="chip">DOCX</div>
+              <div class="chip">PPTX</div>
+              <div class="chip">CSV</div>
+              <div class="chip">ZIP</div>
+            </div> -->
+            <div class="content">
+              <h4>🔄 Processing Pipeline</h4>
+              <div class="bar" style="width: 85%"></div>
+              <div class="bar" style="width: 72%"></div>
+              <div class="bar" style="width: 94%"></div>
+              <p class="pipeline-text">pdf,docx,pptx, zip etc document → chunk → embedding → FAISS pipeline with metadata preservation and multi‑backend storage, MongoDB, Postgres, Oracle etc..</p>
+              <div class="chips-container">
+                <div class="chip">OpenAI</div>
+                <div class="chip">Sentence‑Transformers</div>
+                <div class="chip">vLLM</div>
+                <div class="chip">OpenAI Compatible Custom LLM host</div>
+                <div class="chip">Ollama</div>
+                <div class="chip">LM Studio</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Overview -->
+    <section class="section-overview">
+      <div class="container">
+        <h2 class="center">📋 Content Overview</h2>
+        <p class="center sub">Navigate directly to the sections most relevant to your needs</p>
+        <div class="overview-grid">
+          <div class="overview-card" onclick="document.getElementById('summary').scrollIntoView({behavior:'smooth'})">
+            <h4>🎯 Executive Summary</h4>
+            <p>Quick overview of EmbeddingHub's core value proposition and key highlights</p>
+            <div class="time">⏱️ 2 min read</div>
+          </div>
+          <div class="overview-card" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+            <h4>✨ Key Features</h4>
+            <p>Comprehensive breakdown of technical capabilities and enterprise features</p>
+            <div class="time">⏱️ 3 min read</div>
+          </div>
+          <div class="overview-card" onclick="document.getElementById('use-cases').scrollIntoView({behavior:'smooth'})">
+            <h4>🎯 Use Cases</h4>
+            <p>Real-world applications and industry-specific implementations</p>
+            <div class="time">⏱️ 2 min read</div>
+          </div>
+          <div class="overview-card" onclick="document.getElementById('architecture').scrollIntoView({behavior:'smooth'})">
+            <h4>🔧 Technical Architecture</h4>
+            <p>Deep dive into system design, components, and technology stack</p>
+            <div class="time">⏱️ 4 min read</div>
+          </div>
+          <div class="overview-card" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">
+            <h4>💰 Pricing & Business Model</h4>
+            <p>Licensing strategy, revenue streams, and commercial approach</p>
+            <div class="time">⏱️ 2 min read</div>
+          </div>
+          <div class="overview-card" onclick="document.getElementById('roadmap').scrollIntoView({behavior:'smooth'})">
+            <h4>🗺️ Future Roadmap</h4>
+            <p>Development timeline and planned feature enhancements</p>
+            <div class="time">⏱️ 3 min read</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Executive Summary -->
+    <section id="summary">
+      <div class="container grid">
+        <div class="col-8">
+          <h2>🎯 Executive Summary</h2>
+          <div class="card reveal">
+            <p><strong>EmbeddingHub</strong> centralizes AI document processing, embedding generation, and vector search into a unified, production‑ready library. It removes the overhead of stitching multiple tools and adds enterprise features like multi‑backend storage, comprehensive logging, and full CRUD operations.</p>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card reveal">
+            <h3 class="mt-0">Highlights</h3>
+            <ul class="list">
+              <li>Drop‑in pipeline</li>
+              <li>Multi‑provider embeddings</li>
+              <li>Pluggable storage</li>
+              <li>FAISS similarity search</li>
+              <li>Super fast embedding & Retrieval</li>
+              <li>Single embedding endpoint for all AI apps</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Overview -->
+    <section id="overview">
+      <div class="container">
+        <h2>🏢 Business Overview</h2>
+        <p class="sub">Vision, target market, and opportunity</p>
+        <div class="grid">
+          <div class="col-4"><div class="card reveal"><h3>Product Vision</h3><p>“Centralizing AI Embeddings for Smarter Enterprises” — a single library handling the complete document‑to‑vector pipeline with enterprise‑grade reliability and scalability.</p></div></div>
+          <div class="col-4"><div class="card reveal"><h3>Target Market</h3><ul class="list"><li><strong>Primary:</strong> Enterprise AI/ML teams, Data Science departments</li><li><strong>Secondary:</strong> AI startups, research institutions, consulting firms</li><li><strong>Use Cases:</strong> Document search, RFP analysis, legal processing, research automation</li></ul></div></div>
+          <div class="col-4"><div class="card reveal"><h3>Market Opportunity</h3><ul class="list"><li>Surging demand for document AI & vector search</li><li>Fragmented tools → integration burden</li><li>Need for unified, maintainable AI pipelines</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section id="value">
+      <div class="container">
+        <h2>💼 Business Value Proposition</h2>
+        <div class="grid">
+          <div class="col-6"><div class="card reveal"><h3>Core Benefits</h3><ol class="list"><li><strong>Faster Time‑to‑Value:</strong> Drop‑in solution vs. months of integration</li><li><strong>Cost Reduction:</strong> 60–80% less development time; unified maintenance</li><li><strong>Risk Mitigation:</strong> Proven architecture, robust error handling</li><li><strong>Scalability:</strong> Multi‑backend storage, cloud‑ready deployment</li></ol></div></div>
+          <div class="col-6"><div class="card reveal"><h3>ROI Drivers</h3><ul class="list"><li><strong>Development Efficiency:</strong> 6 months → 2 weeks</li><li><strong>Operational Costs:</strong> Single codebase vs. many tools</li><li><strong>Performance:</strong> O(1) cache, optimized FAISS ops</li><li><strong>Compliance:</strong> Enterprise logging, audit trails, secure storage</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Architecture -->
+    <section id="architecture">
+      <div class="container">
+        <h2>🔧 Technical Architecture</h2>
+        <div class="center mb-24">
+          <img src="images/ArchitectureEmbeddingHub.png" alt="EmbeddingHub Technical Architecture Diagram" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); border: 1px solid rgb(var(--stroke));" />
+        </div>
+        <div class="grid">
+          <div class="col-6"><div class="card reveal"><h3>Core Components</h3><ol class="list"><li><strong>EmbeddingModel:</strong> Multi‑provider embedding generation</li><li><strong>DocRetriever:</strong> Document processing & vector management</li><li><strong>StorageBackend:</strong> Pluggable storage architecture</li><li><strong>VectorDB:</strong> FAISS‑powered similarity search</li></ol></div></div>
+          <div class="col-6"><div class="card reveal"><h3>Technology Stack</h3><ul class="list"><li>Python 3.8+</li><li>FAISS vector search</li><li>Multi‑backend storage: file system, MongoDB, PostgreSQL</li><li>Extensible plugin‑based architecture</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+      <div class="container">
+        <h2>✨ Key Features & Capabilities</h2>
+        <div class="grid">
+          <div class="col-6"><div class="card reveal"><h3>Multi‑Provider Embeddings</h3><ul class="list"><li>Local models: sentence‑transformers, Ollama, vLLM</li><li>Cloud APIs: OpenAI & compatible servers</li><li>Custom servers: LM Studio, self‑hosted</li><li>Unified API: same interface for all providers</li></ul></div></div>
+          <div class="col-6"><div class="card reveal"><h3>Intelligent Document Processing</h3><ul class="list"><li>Multi‑format: PDF, DOCX, PPTX, CSV, ZIP</li><li>Smart chunking: semantic & recursive</li><li>Configurable: chunk size, overlap, strategy</li><li>Metadata preservation: source, tags, file info</li></ul></div></div>
+          <div class="col-6"><div class="card reveal"><h3>Enterprise‑Grade Storage</h3><ul class="list"><li>3 modes: in‑memory, local FS, external DBs</li><li>Backends: MongoDB, PostgreSQL, custom</li><li>Persistence: FAISS index + metadata</li><li>Scalability: multi‑server, cloud‑ready</li></ul></div></div>
+          <div class="col-6"><div class="card reveal"><h3>Performance & Monitoring</h3><ul class="list"><li>3 logging levels: verbose, concise, silent</li><li>Cache optimization: O(1), LRU/FIFO</li><li>Performance metrics: per‑chunk timing</li><li>Resource management: auto cleanup, size limits</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Use Cases -->
+    <section id="use-cases">
+      <div class="container">
+        <h2>🎯 Use Cases & Applications</h2>
+        <div class="grid">
+          <div class="col-6"><div class="card reveal"><h3>Enterprise Applications</h3><ol class="list"><li>RFP & Proposal Analysis</li><li>Legal Document Search</li><li>Research Automation</li><li>Content Management & Retrieval</li></ol></div></div>
+          <div class="col-6"><div class="card reveal"><h3>Industry Verticals</h3><ul class="list"><li>Financial services: compliance & risk</li><li>Healthcare: medical literature search</li><li>Legal: case research & discovery</li><li>Consulting: client document analysis</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing & Business Model -->
+    <section id="pricing">
+      <div class="container">
+        <h2>💰 Pricing & Business Model</h2>
+        <div class="grid">
+          <div class="col-6"><div class="card reveal"><h3>Licensing Strategy</h3><ul class="list"><li>Open Source: Apache 2.0</li><li>Enterprise Support: premium & SLAs</li><li>Commercial licensing for redistribution</li></ul></div></div>
+          <div class="col-6"><div class="card reveal"><h3>Revenue Streams</h3><ol class="list"><li>Professional services</li><li>Enterprise support</li><li>Training & consulting</li><li>Managed cloud services</li></ol></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Go to Market -->
+    <section id="gtm">
+      <div class="container">
+        <h2>📈 Go‑to‑Market Strategy</h2>
+        <div class="grid">
+          <div class="col-4"><div class="card reveal"><h3>Phase 1: Community</h3><ul class="list"><li>Open source on GitHub</li><li>Docs: examples & tutorials</li><li>Engage on StackOverflow & communities</li></ul></div></div>
+          <div class="col-4"><div class="card reveal"><h3>Phase 2: Enterprise</h3><ul class="list"><li>Case studies & ROI</li><li>Partner with SIs & consultancies</li><li>Direct technical demos</li></ul></div></div>
+          <div class="col-4"><div class="card reveal"><h3>Phase 3: Platform</h3><ul class="list"><li>Managed cloud instances</li><li>Marketplace integrations</li><li>Advanced security & compliance</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Risks -->
+    <section id="risks">
+      <div class="container">
+        <h2>🔒 Risk Assessment & Mitigation</h2>
+        <div class="grid">
+          <div class="col-6"><div class="card reveal"><h3>Technical Risks</h3><ul class="list"><li>FAISS limitations → index rebuilding strategies</li><li>Scaling → multi‑backend architecture</li><li>Dependencies → testing & version pinning</li></ul></div></div>
+          <div class="col-6"><div class="card reveal"><h3>Business Risks</h3><ul class="list"><li>Competition → unique positioning</li><li>Adoption → comprehensive docs & examples</li><li>Revenue model → diversified streams</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metrics -->
+    <section id="metrics">
+      <div class="container">
+        <h2>📊 Success Metrics</h2>
+        <div class="grid">
+          <div class="col-6"><div class="card reveal"><h3>Technical</h3><ul class="list"><li>Sub‑second search across 1M+ docs</li><li>99.9% uptime & robust error handling</li><li>Scalability to 10M+ documents</li></ul></div></div>
+          <div class="col-6"><div class="card reveal"><h3>Business</h3><ul class="list"><li>Adoption: GitHub stars, PyPI downloads</li><li>Enterprise usage & deal size</li><li>Revenue growth: services & support</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section id="roadmap">
+      <div class="container">
+        <h2>🗺️ Future Roadmap</h2>
+        <div class="grid">
+          <div class="col-4"><div class="card reveal"><h3>Short Term (3–6 mo)</h3><ul class="list"><li>Providers: Azure OpenAI, Google AI</li><li>Storage: S3, GCS backends</li><li>Performance: GPU & distributed</li></ul></div></div>
+          <div class="col-4"><div class="card reveal"><h3>Medium Term (6–12 mo)</h3><ul class="list"><li>Web admin & monitoring</li><li>Service APIs: REST/GraphQL</li><li>Advanced analytics & insights</li></ul></div></div>
+          <div class="col-4"><div class="card reveal"><h3>Long Term (12+ mo)</h3><ul class="list"><li>AI‑assisted chunking</li><li>Multi‑modal: images, audio, video</li><li>Global, multi‑region compliance</li></ul></div></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Conclusion -->
+    <section id="conclusion">
+      <div class="container">
+        <h2>🎯 Conclusion</h2>
+        <div class="card reveal">
+          <p><strong>EmbeddingHub</strong> addresses real enterprise pain points in AI document processing with a unified, open‑source foundation and enterprise‑grade capabilities. Its mix of technical excellence, business value, and market timing creates a compelling case for adoption and investment.</p>
+        </div>
+        <div class="center mt-24">
+          <a class="btn primary icon" href="#summary"><svg width="18" height="18"><use href="#arrow"/></svg> Start Exploring</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <button class="btn to-top" id="toTop" aria-label="Back to top">↑ Top</button>
+
+  <footer>
+    <div class="container">
+      <div class="grid">
+        <div class="col-6">
+          <strong>EmbeddingHub</strong> — Centralizing AI Embeddings for Smarter Enterprises
+          <div class="sub">© <span id="year"></span> EmbeddingHub. All rights reserved.</div>
+        </div>
+        <div class="col-6" style="text-align:right">
+          <a href="#features" class="btn">Features</a>
+          <a href="#architecture" class="btn">Architecture</a>
+          <a href="#pricing" class="btn">Pricing</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) document.body.setAttribute('data-theme', storedTheme);
+    themeToggle.addEventListener('click', () => {
+      const current = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', current);
+      localStorage.setItem('theme', current);
+      themeToggle.innerHTML = `<svg width="20" height="20"><use href="#${current==='dark'?'sun':'moon'}"/></svg>`;
+    });
+    // Initial icon
+    themeToggle.innerHTML = `<svg width="20" height="20"><use href="#${document.body.getAttribute('data-theme')==='dark'?'sun':'moon'}"/></svg>`;
+
+    // Mobile menu
+    const burger = document.getElementById('burger');
+    const mnav = document.getElementById('mnav');
+    burger.addEventListener('click', () => mnav.classList.toggle('open'));
+    mnav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mnav.classList.remove('open')));
+
+    // Copy command
+    const copyBtn = document.getElementById('copyBtn');
+    copyBtn.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText('https://github.com/azam25/EmbeddingHub'); copyBtn.textContent = 'Copied!'; setTimeout(()=>copyBtn.innerHTML = '<svg width="16" height="16"><use href="#copy"/></svg> Copy', 1400); } catch(e) { console.log(e); }
+    });
+
+    // Active link highlight on scroll
+    const links = document.querySelectorAll('.navlinks a');
+    const sections = Array.from(document.querySelectorAll('main section[id]'));
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry => {
+        const id = entry.target.getAttribute('id');
+        const link = Array.from(links).find(a=>a.getAttribute('href') === `#${id}`);
+        if (link) link.classList.toggle('active', entry.isIntersecting);
+      });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.01 });
+    sections.forEach(s=>observer.observe(s));
+
+    // Reveal animations
+    const reveals = document.querySelectorAll('.reveal');
+    const revObs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target);} });
+    }, { threshold: 0.12 });
+    reveals.forEach(el=>revObs.observe(el));
+
+    // Back to top
+    const toTop = document.getElementById('toTop');
+    window.addEventListener('scroll', () => {
+      toTop.classList.toggle('show', window.scrollY > 800);
+    });
+    toTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Progress bar
+    const progressBar = document.getElementById('progressBar');
+    const contentNav = document.getElementById('contentNav');
+    const stickyCta = document.getElementById('stickyCta');
+    
+    function updateProgress() {
+      const scrollTop = window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      progressBar.style.width = scrollPercent + '%';
+      
+      // Show/hide navigation elements based on scroll
+      const showThreshold = 200;
+      contentNav.classList.toggle('show', scrollTop > showThreshold);
+      stickyCta.classList.toggle('show', scrollTop > showThreshold && scrollTop < docHeight - 500);
+    }
+
+    // Content navigation active states
+    const contentNavLinks = document.querySelectorAll('.content-nav a');
+    const contentNavObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.getAttribute('id');
+        const navLink = Array.from(contentNavLinks).find(a => a.getAttribute('href') === `#${id}`);
+        if (navLink) {
+          navLink.classList.toggle('active', entry.isIntersecting);
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.01 });
+
+    // Observe sections for content navigation
+    const navSections = ['summary', 'overview', 'value', 'architecture', 'features', 'use-cases', 'pricing', 'roadmap'];
+    navSections.forEach(id => {
+      const section = document.getElementById(id);
+      if (section) contentNavObserver.observe(section);
+    });
+
+    // Scroll event listener
+    window.addEventListener('scroll', updateProgress);
+    
+    // Smooth scroll for content navigation
+    contentNavLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Enhanced mobile experience
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    document.addEventListener('touchstart', e => {
+      touchStartY = e.changedTouches[0].screenY;
+    });
+    
+    document.addEventListener('touchend', e => {
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipe();
+    });
+    
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartY - touchEndY;
+      
+      if (Math.abs(diff) > swipeThreshold) {
+        // Optional: Add swipe navigation between sections
+        // This could navigate to next/previous section
+      }
+    }
+
+    // Performance optimization: throttle scroll events
+    let ticking = false;
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
+    }
+    
+    window.addEventListener('scroll', () => {
+      requestTick();
+      ticking = false;
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+          case 'Home':
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            break;
+          case 'End':
+            e.preventDefault();
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            break;
+        }
+      }
+    });
+
+    // Initialize
+    updateProgress();
+  </script>
+</body>
+</html>
