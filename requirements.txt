@@ -1,0 +1,19 @@
+PyPDF2>=3.0.0
+langchain>=0.0.200
+faiss-cpu>=1.7.2
+numpy>=1.20.0
+requests>=2.25.0
+semantic-text-splitter>=0.6.0
+tiktoken>=0.4.0
+llama-cpp-python>=0.2.0; sys_platform != "win32"
+semantic-text-splitter>=0.6.0
+transformers>=4.30.0
+sentence-transformers>=2.2.0
+openai>=1.0.0
+
+# Storage Backend Dependencies (Optional)
+# For MongoDB backend: pip install pymongo
+# For PostgreSQL backend: pip install sqlalchemy psycopg2-binary
+# For Redis backend: pip install redis
+# For AWS S3 backend: pip install boto3
+# For Google Cloud Storage: pip install google-cloud-storage
